@@ -39,52 +39,56 @@ public class OWL2RL_TBoxRewriter {
 		normalizer.normalizeAxioms();
 		
 		Set<ConceptInclusionAxiom> normalizedAxioms = normalizer.getNormalizedAxioms();
-		for (ConceptInclusionAxiom subConceptAxiom : normalizedAxioms) {
+		for (ConceptInclusionAxiom subConceptOfAxiom : normalizedAxioms) {
 			
-			System.out.println("Translate normalized axiom: " + subConceptAxiom);
+			System.out.println("Translate normalized axiom: " + subConceptOfAxiom);
 		
-			Concept subConcept =  subConceptAxiom.getSubConcept();
-			Concept superConcept = subConceptAxiom.getSuperConcept();
+			Concept subConcept =  subConceptOfAxiom.getSubConcept();
+			Concept superConcept = subConceptOfAxiom.getSuperConcept();
 			
-			Body body = new Body();
-			Head head = new Head();
-			
-			Variable x = new Variable("X");
-			Variable y = new Variable("Y");
-			Variable y1 = new Variable("Y1");
-			
-			if (subConcept.isAtomic()) {
-				body.getBodyLiterals().add(getLiteralFromAtomicConcept(subConcept, x));
-			} else if (subConcept instanceof ConjunctionConcept) {
-				ConjunctionConcept conj = (ConjunctionConcept) subConcept;
-				for (Concept c : conj.getConcepts()) {
-					body.getBodyLiterals().add(getLiteralFromAtomicConcept(c, x));
-				}
-			} 
-			
-			if (superConcept.isAtomic()) {
-				head.setHeadAtom(getLiteralFromAtomicConcept(superConcept, x));
-			} else if (superConcept instanceof UniversalConcept) {
-				head.setHeadAtom(getLiteralFromAtomicConcept(((UniversalConcept) superConcept).getConcept(), y));
-				body.getBodyLiterals().add(getLiteralFromRole(((UniversalConcept) superConcept).getRole(), x, y));
-			} else if (superConcept instanceof MaxCardinalityConcept) {
-				if (((MaxCardinalityConcept) superConcept).getMaxCardinality() == 1) {
-					body.getBodyLiterals().add(getLiteralFromRole(((MaxCardinalityConcept)superConcept).getRole(), x, y));
-					body.getBodyLiterals().add(getLiteralFromRole(((MaxCardinalityConcept)superConcept).getRole(), x, y1));
-					body.getBodyLiterals().add(getLiteralFromAtomicConcept(((MaxCardinalityConcept) superConcept).getConcept(),y));
-					body.getBodyLiterals().add(getLiteralFromAtomicConcept(((MaxCardinalityConcept) superConcept).getConcept(),y1));
-					body.getInequalities().add(new NotEqualToLiteral(y, y1));
-				} else if (((MaxCardinalityConcept) superConcept).getMaxCardinality() == 0){
-					body.getBodyLiterals().add(getLiteralFromRole(((MaxCardinalityConcept)superConcept).getRole(), x, y));
-					body.getBodyLiterals().add(getLiteralFromAtomicConcept(((MaxCardinalityConcept) superConcept).getConcept(),y));
-				}
-			} 
-			
-			Rule rule = new Rule(head, body);
-			rules.add(rule);
-			
-			System.out.println("Added Datalog rule: " + rule);
-			
+			if (subConcept instanceof BottomConcept || subConcept instanceof TopConcept || superConcept instanceof BottomConcept || superConcept instanceof TopConcept) {
+				System.out.println("Error during traslation...");
+			}
+			else {
+				Body body = new Body();
+				Head head = new Head();
+				
+				Variable x = new Variable("X");
+				Variable y = new Variable("Y");
+				Variable y1 = new Variable("Y1");
+				
+				if (subConcept.isAtomic()) {
+					body.getBodyLiterals().add(getLiteralFromAtomicConcept(subConcept, x));
+				} else if (subConcept instanceof ConjunctionConcept) {
+					ConjunctionConcept conj = (ConjunctionConcept) subConcept;
+					for (Concept c : conj.getConcepts()) {
+						body.getBodyLiterals().add(getLiteralFromAtomicConcept(c, x));
+					}
+				} 
+				
+				if (superConcept.isAtomic()) {
+					head.setHeadAtom(getLiteralFromAtomicConcept(superConcept, x));
+				} else if (superConcept instanceof UniversalConcept) {
+					head.setHeadAtom(getLiteralFromAtomicConcept(((UniversalConcept) superConcept).getConcept(), y));
+					body.getBodyLiterals().add(getLiteralFromRole(((UniversalConcept) superConcept).getRole(), x, y));
+				} else if (superConcept instanceof MaxCardinalityConcept) {
+					if (((MaxCardinalityConcept) superConcept).getMaxCardinality() == 1) {
+						body.getBodyLiterals().add(getLiteralFromRole(((MaxCardinalityConcept)superConcept).getRole(), x, y));
+						body.getBodyLiterals().add(getLiteralFromRole(((MaxCardinalityConcept)superConcept).getRole(), x, y1));
+						body.getBodyLiterals().add(getLiteralFromAtomicConcept(((MaxCardinalityConcept) superConcept).getConcept(),y));
+						body.getBodyLiterals().add(getLiteralFromAtomicConcept(((MaxCardinalityConcept) superConcept).getConcept(),y1));
+						body.getInequalities().add(new NotEqualToLiteral(y, y1));
+					} else if (((MaxCardinalityConcept) superConcept).getMaxCardinality() == 0){
+						body.getBodyLiterals().add(getLiteralFromRole(((MaxCardinalityConcept)superConcept).getRole(), x, y));
+						body.getBodyLiterals().add(getLiteralFromAtomicConcept(((MaxCardinalityConcept) superConcept).getConcept(),y));
+					}
+				} 
+				
+				Rule rule = new Rule(head, body);
+				rules.add(rule);
+				
+				System.out.println("Added Datalog rule: " + rule);
+			}
 		}
 		
 		// Special Axioms
