@@ -1,5 +1,8 @@
 package ontology.rewriter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.Set;
 
 import datalog.costructs.*;
@@ -18,7 +21,17 @@ public class OWL2RL_TBoxRewriter {
 		return p;
 	}
 	
-	public void rewrite (TBox tbox) {
+	public void rewrite (TBox tbox) throws FileNotFoundException {
+		
+		// Creating a File object that represents the disk file. 
+        PrintStream outputFile = new PrintStream(new File("OntologyTranslation.txt")); 
+  
+        // Store current System.out before assigning a new value 
+        PrintStream console = System.out; 
+  
+        // Assign outputFile to output stream 
+        System.setOut(outputFile); 
+         
 		
 		Set<Rule> rules = p.getRules();
 		
@@ -28,7 +41,7 @@ public class OWL2RL_TBoxRewriter {
 		Set<ConceptInclusionAxiom> normalizedAxioms = normalizer.getNormalizedAxioms();
 		for (ConceptInclusionAxiom subConceptAxiom : normalizedAxioms) {
 			
-//			System.out.println("Translate normalized axiom: " + subConceptAxiom);
+			System.out.println("Translate normalized axiom: " + subConceptAxiom);
 		
 			Concept subConcept =  subConceptAxiom.getSubConcept();
 			Concept superConcept = subConceptAxiom.getSuperConcept();
@@ -70,14 +83,14 @@ public class OWL2RL_TBoxRewriter {
 			Rule rule = new Rule(head, body);
 			rules.add(rule);
 			
-//			System.out.println("Added Datalog rule: " + rule);
+			System.out.println("Added Datalog rule: " + rule);
 			
 		}
 		
 		// Special Axioms
 		Set<ConceptInclusionAxiom> specialAxioms = normalizer.getSpecialAxioms();
 		for (ConceptInclusionAxiom specialAx : specialAxioms) {
-//			System.out.println("Translate special axiom: " + specialAx);
+			System.out.println("Translate special axiom: " + specialAx);
 			if (specialAx.getSuperConcept() instanceof UniversalConcept) {
 				UniversalConcept superConcept = (UniversalConcept) specialAx.getSuperConcept();
 				Role r = superConcept.getRole();
@@ -128,7 +141,7 @@ public class OWL2RL_TBoxRewriter {
 					Rule rule = new Rule(head, body);
 					rules.add(rule);
 					
-//					System.out.println("Added Datalog rule: " + rule);
+					System.out.println("Added Datalog rule: " + rule);
 					
 				} else {
 					System.out.println("Unmanaged traslation: " + specialAx);
@@ -142,7 +155,7 @@ public class OWL2RL_TBoxRewriter {
 		// Role Inclusion Rewriting
 		for (RoleInclusionAxiom roleInclusion : tbox.getRoleInclusions()) {
 			
-//			System.out.println("Translate axiom: " + roleInclusion);
+			System.out.println("Translate axiom: " + roleInclusion);
 			
 			Role subRole = roleInclusion.getSubRole();
 			Role superRole = roleInclusion.getSuperRole();
@@ -157,14 +170,14 @@ public class OWL2RL_TBoxRewriter {
 			Rule rule = new Rule(head, body);
 			rules.add(rule);
 			
-//			System.out.println("Added Datalog rule: " + rule);
+			System.out.println("Added Datalog rule: " + rule);
 			
 		}
 		
 		// Disjoint Roles Rewriting
 		for (DisjointRolesAxiom disjointRoles : tbox.getDisjointRolesAxioms()) {
 			
-//			System.out.println("Translate axiom: " + disjointRoles);
+			System.out.println("Translate axiom: " + disjointRoles);
 			
 			Role firstRole = disjointRoles.getRole1();
 			Role secondRole = disjointRoles.getRole2();
@@ -180,14 +193,14 @@ public class OWL2RL_TBoxRewriter {
 			Rule rule = new Rule(voidHead, body);
 			rules.add(rule);
 			
-//			System.out.println("Added Datalog rule: " + rule);
+			System.out.println("Added Datalog rule: " + rule);
 			
 		}
 		
 		// Irreflexive Axioms Rewriting
 		for (IrreflexiveAxiom irreflexiveRole : tbox.getIrreflexiveAxioms()) {
 			
-//			System.out.println("Translate axiom: " + irreflexiveRole);
+			System.out.println("Translate axiom: " + irreflexiveRole);
 			
 			Role role = irreflexiveRole.getRole();
 			// Head (void)
@@ -199,14 +212,14 @@ public class OWL2RL_TBoxRewriter {
 			Rule rule = new Rule(voidHead, body);
 			rules.add(rule);
 			
-//			System.out.println("Added Datalog rule: " + rule);
+			System.out.println("Added Datalog rule: " + rule);
 			
 		}
 		
 		// Asymmetric Axioms Rewriting
 		for (AsymmetricAxiom asymmetricRole : tbox.getAsymmetricAxioms()) {
 			
-//			System.out.println("Translate axiom: " + asymmetricRole);
+			System.out.println("Translate axiom: " + asymmetricRole);
 			
 			Role role = asymmetricRole.getRole();
 			Variable x = new Variable("X");
@@ -221,14 +234,14 @@ public class OWL2RL_TBoxRewriter {
 			Rule rule = new Rule(voidHead, body);
 			rules.add(rule);
 			
-//			System.out.println("Added Datalog rule: " + rule);
+			System.out.println("Added Datalog rule: " + rule);
 			
 		}
 		
 		// Transitivity Axioms Rewriting
 		for (TransitivityAxiom transitivityRole : tbox.getTransitivityAxioms()) {
 			
-//			System.out.println("Translate axiom: " + transitivityRole);
+			System.out.println("Translate axiom: " + transitivityRole);
 			
 			Role role = transitivityRole.getRole();
 			Variable x = new Variable("X");
@@ -244,7 +257,7 @@ public class OWL2RL_TBoxRewriter {
 			Rule rule = new Rule(head, body);
 			rules.add(rule);
 			
-//			System.out.println("Added Datalog rule: " + rule);
+			System.out.println("Added Datalog rule: " + rule);
 			
 		}
 		
