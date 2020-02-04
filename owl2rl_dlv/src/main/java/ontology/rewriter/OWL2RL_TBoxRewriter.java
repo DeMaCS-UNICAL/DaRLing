@@ -24,7 +24,9 @@ public class OWL2RL_TBoxRewriter {
 	public void rewrite (TBox tbox) throws FileNotFoundException {
 		
 		// Creating Files object that represent the disk file. 
-        PrintStream ontTranslationFile = new PrintStream(new File("OntologyTranslation.txt")); 
+        PrintStream ontTranslationFile = new PrintStream(new File("OntologyTranslation.txt"));
+        PrintStream errorInTranslationFile = new PrintStream(new File("TranslationErrors.txt"));
+        
   
         // Store current System.out before assigning a new value 
 //        PrintStream console = System.out; 
@@ -47,10 +49,14 @@ public class OWL2RL_TBoxRewriter {
 			Concept superConcept = subConceptOfAxiom.getSuperConcept();
 			
 			if (subConcept instanceof BottomConcept) { 
-				System.out.println("Error during traslation...");
+				System.setOut(errorInTranslationFile);
+				System.out.println("Error during traslation. Axiom: " + subConceptOfAxiom);
+				System.setOut(ontTranslationFile);
 			}
 			else if (subConcept instanceof TopConcept || superConcept instanceof TopConcept) {
-				System.out.println("Unmanaged axiom");
+				System.setOut(errorInTranslationFile);
+				System.out.println("Unmanaged Axiom: " + subConceptOfAxiom);
+				System.setOut(ontTranslationFile);
 			}
 			else {
 				Body body = new Body();
@@ -122,7 +128,9 @@ public class OWL2RL_TBoxRewriter {
 					System.out.println("Added Datalog rule: " + rule);
 					
 				} else {
+					System.setOut(errorInTranslationFile);
 					System.out.println("Unmanaged traslation: " + specialAx);
+					System.setOut(ontTranslationFile);
 				}
 			} 
 			else if (specialAx.getSuperConcept() instanceof MaxCardinalityConcept) {
