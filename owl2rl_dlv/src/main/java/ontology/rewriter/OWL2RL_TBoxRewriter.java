@@ -23,14 +23,14 @@ public class OWL2RL_TBoxRewriter {
 	
 	public void rewrite (TBox tbox) throws FileNotFoundException {
 		
-		// Creating a File object that represents the disk file. 
-        PrintStream outputFile = new PrintStream(new File("OntologyTranslation.txt")); 
+		// Creating Files object that represent the disk file. 
+        PrintStream ontTranslationFile = new PrintStream(new File("OntologyTranslation.txt")); 
   
         // Store current System.out before assigning a new value 
-        PrintStream console = System.out; 
+//        PrintStream console = System.out; 
   
-        // Assign outputFile to output stream 
-        System.setOut(outputFile); 
+        // Assign ontTranslationFile to output stream 
+        System.setOut(ontTranslationFile); 
          
 		
 		Set<Rule> rules = p.getRules();
@@ -46,8 +46,11 @@ public class OWL2RL_TBoxRewriter {
 			Concept subConcept =  subConceptOfAxiom.getSubConcept();
 			Concept superConcept = subConceptOfAxiom.getSuperConcept();
 			
-			if (subConcept instanceof BottomConcept || subConcept instanceof TopConcept || superConcept instanceof BottomConcept || superConcept instanceof TopConcept) {
+			if (subConcept instanceof BottomConcept) { 
 				System.out.println("Error during traslation...");
+			}
+			else if (subConcept instanceof TopConcept || superConcept instanceof TopConcept) {
+				System.out.println("Unmanaged axiom");
 			}
 			else {
 				Body body = new Body();
@@ -86,8 +89,12 @@ public class OWL2RL_TBoxRewriter {
 				
 				Rule rule = new Rule(head, body);
 				rules.add(rule);
-				
-				System.out.println("Added Datalog rule: " + rule);
+				if (superConcept instanceof BottomConcept) {
+					System.out.println("Added Datalog constraint: " + rule);
+				}
+				else {
+					System.out.println("Added Datalog rule: " + rule);
+				}
 			}
 		}
 		
@@ -112,7 +119,7 @@ public class OWL2RL_TBoxRewriter {
 					Rule rule = new Rule(head, body);
 					rules.add(rule);
 					
-//					System.out.println("Added Datalog rule: " + rule);
+					System.out.println("Added Datalog rule: " + rule);
 					
 				} else {
 					System.out.println("Unmanaged traslation: " + specialAx);
