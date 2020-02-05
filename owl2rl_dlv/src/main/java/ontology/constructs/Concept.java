@@ -52,4 +52,36 @@ public abstract class Concept {
 		return false;
 	}
 	
+	public boolean isSimple() {
+		if (this instanceof BottomConcept)
+			return true;
+		if (this instanceof AtomicConcept)
+			return true;
+		if (this instanceof ExistentialConcept) {
+			ExistentialConcept concept = (ExistentialConcept) this;
+			if (concept.getConcept() instanceof AtomicConcept) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		if (this instanceof UniversalConcept) {
+			UniversalConcept concept = (UniversalConcept) this;
+			if (concept.getConcept() instanceof AtomicConcept) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		if (this instanceof MaxCardinalityConcept) {
+			MaxCardinalityConcept concept = (MaxCardinalityConcept) this;
+			if ((concept.getConcept() instanceof AtomicConcept) && (concept.getMaxCardinality() == 1)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+	
 }
