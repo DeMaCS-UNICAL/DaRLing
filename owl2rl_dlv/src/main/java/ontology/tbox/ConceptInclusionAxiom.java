@@ -68,12 +68,23 @@ public class ConceptInclusionAxiom {
 	}
 	
 	public boolean isInNormalFormInOneStep() {
-		if (this.subConcept.isAtomic() && (this.superConcept instanceof NegatedConcept)) {
-			NegatedConcept concept = (NegatedConcept) this.superConcept;
-			if (concept.getConcept() instanceof AtomicConcept) {
+		if (this.subConcept.isAtomic()) { 
+			if (this.superConcept instanceof NegatedConcept) {
+				NegatedConcept concept = (NegatedConcept) this.superConcept;
+				if (concept.getConcept() instanceof AtomicConcept) {
+					return true;
+				}
+				return false;
+			}
+			else if (this.superConcept instanceof ConjunctionConcept) {
+				ConjunctionConcept concept = (ConjunctionConcept) this.subConcept;
+				for (Concept c : concept.getConcepts()) {
+					if (!c.isAtomic()) {
+						return false;
+					}
+				}
 				return true;
 			}
-			return false;
 		}
 		if (this.superConcept.isAtomic()) {
 			if (this.subConcept instanceof DisjunctionConcept) {

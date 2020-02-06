@@ -58,6 +58,12 @@ public class TBoxNormalizer {
 					ExistentialConcept exCon = (ExistentialConcept) subConcept;
 					normalizedAxioms.add(new ConceptInclusionAxiom(exCon.getConcept(), new UniversalConcept(exCon.getRole().getInverseRole(), superConcept)));
 				}
+				else if (subConcept instanceof MinCardinalityConcept) {
+					MinCardinalityConcept minCon = (MinCardinalityConcept) subConcept;
+					if (minCon.getMinCardinality() == 1) {
+						normalizedAxioms.add(new ConceptInclusionAxiom(minCon.getConcept(), new UniversalConcept(minCon.getRole().getInverseRole(), superConcept)));
+					}
+				}
 				else if (superConcept instanceof NegatedConcept) {
 					NegatedConcept neg = (NegatedConcept) superConcept;
 					ConjunctionConcept newSubConcept = new ConjunctionConcept();

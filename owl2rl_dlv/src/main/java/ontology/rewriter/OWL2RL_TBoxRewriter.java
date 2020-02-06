@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Set;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
+
 import datalog.costructs.*;
 import ontology.constructs.*;
 import ontology.tbox.*;
@@ -41,6 +43,8 @@ public class OWL2RL_TBoxRewriter {
 		normalizer.normalizeAxioms();
 		
 		Set<ConceptInclusionAxiom> normalizedAxioms = normalizer.getNormalizedAxioms();
+		Set<ConceptInclusionAxiom> specialAxioms = normalizer.getSpecialAxioms();
+		
 		for (ConceptInclusionAxiom subConceptOfAxiom : normalizedAxioms) {
 			
 			System.out.println("Translate normalized axiom: " + subConceptOfAxiom);
@@ -48,15 +52,13 @@ public class OWL2RL_TBoxRewriter {
 			Concept subConcept =  subConceptOfAxiom.getSubConcept();
 			Concept superConcept = subConceptOfAxiom.getSuperConcept();
 			
-			if (subConcept instanceof BottomConcept) { 
+			if (subConcept instanceof BottomConcept || superConcept instanceof TopConcept) { 
 				System.setOut(errorInTranslationFile);
-				System.out.println("Error during traslation. Axiom: " + subConceptOfAxiom);
+				System.out.println("Error during translation. Axiom: " + subConceptOfAxiom);
 				System.setOut(ontTranslationFile);
 			}
-			else if (subConcept instanceof TopConcept || superConcept instanceof TopConcept) {
-				System.setOut(errorInTranslationFile);
-				System.out.println("Unmanaged Axiom: " + subConceptOfAxiom);
-				System.setOut(ontTranslationFile);
+			else if (subConcept instanceof TopConcept) {
+				specialAxioms.add(subConceptOfAxiom);
 			}
 			else {
 				Body body = new Body();
@@ -92,7 +94,7 @@ public class OWL2RL_TBoxRewriter {
 						body.getBodyLiterals().add(getLiteralFromAtomicConcept(((MaxCardinalityConcept) superConcept).getConcept(),y));
 					}
 				} 
-				
+					
 				Rule rule = new Rule(head, body);
 				rules.add(rule);
 				if (superConcept instanceof BottomConcept) {
@@ -101,11 +103,11 @@ public class OWL2RL_TBoxRewriter {
 				else {
 					System.out.println("Added Datalog rule: " + rule);
 				}
+					
 			}
 		}
 		
 		// Special Axioms
-		Set<ConceptInclusionAxiom> specialAxioms = normalizer.getSpecialAxioms();
 		for (ConceptInclusionAxiom specialAx : specialAxioms) {
 			System.out.println("Translate special axiom: " + specialAx);
 			if (specialAx.getSuperConcept() instanceof UniversalConcept) {
