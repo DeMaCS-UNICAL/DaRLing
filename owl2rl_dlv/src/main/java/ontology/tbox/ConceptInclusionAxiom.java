@@ -1,6 +1,7 @@
 package ontology.tbox;
 
 import ontology.constructs.Concept;
+import ontology.constructs.ConjunctionConcept;
 
 public class ConceptInclusionAxiom {
 	
@@ -42,6 +43,27 @@ public class ConceptInclusionAxiom {
 			return subConcept.equals(ax.getSubConcept()) && superConcept.equals(ax.getSuperConcept());
 		}
 		return false;
+	}
+	
+	public boolean isInNormalForm() {
+		if (this.subConcept.isAtomic() && this.superConcept.isSimple()) {
+			return true;
+		} else if (this.subConcept instanceof ConjunctionConcept) {
+			ConjunctionConcept concept = (ConjunctionConcept) this.subConcept;
+			for (Concept c : concept.getConcepts()) {
+				if (!c.isAtomic()) {
+					return false;
+				}
+			}
+			if (this.superConcept.isSimple()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isInNormalFormInOneStep() {
+		return false; //TODO: complete and commit
 	}
 
 }
