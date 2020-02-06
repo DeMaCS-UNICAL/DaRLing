@@ -1,7 +1,12 @@
 package ontology.tbox;
 
+import ontology.constructs.AtomicConcept;
 import ontology.constructs.Concept;
 import ontology.constructs.ConjunctionConcept;
+import ontology.constructs.DisjunctionConcept;
+import ontology.constructs.ExistentialConcept;
+import ontology.constructs.MinCardinalityConcept;
+import ontology.constructs.NegatedConcept;
 
 public class ConceptInclusionAxiom {
 	
@@ -63,7 +68,39 @@ public class ConceptInclusionAxiom {
 	}
 	
 	public boolean isInNormalFormInOneStep() {
-		return false; //TODO: complete and commit
+		if (this.subConcept.isAtomic() && (this.superConcept instanceof NegatedConcept)) {
+			NegatedConcept concept = (NegatedConcept) this.superConcept;
+			if (concept.getConcept() instanceof AtomicConcept) {
+				return true;
+			}
+			return false;
+		}
+		if (this.superConcept.isAtomic()) {
+			if (this.subConcept instanceof DisjunctionConcept) {
+				DisjunctionConcept concept = (DisjunctionConcept) this.subConcept;
+				for (Concept c : concept.getConcepts()) {
+					if (!c.isAtomic()) {
+						return false;
+					}
+				}
+				return true;
+			}
+			if (this.subConcept instanceof ExistentialConcept) {
+				ExistentialConcept concept = (ExistentialConcept) this.subConcept;
+				if (concept.getConcept().isAtomic()) {
+					return true;
+				}
+				return false;
+			}
+			if (this.subConcept instanceof MinCardinalityConcept) {
+				MinCardinalityConcept concept = (MinCardinalityConcept) this.subConcept;
+				if (concept.getConcept().isAtomic() && concept.getMinCardinality() == 1) {
+					return true;
+				}
+				return false;
+			}
+		}
+		return false; 
 	}
 
 }
