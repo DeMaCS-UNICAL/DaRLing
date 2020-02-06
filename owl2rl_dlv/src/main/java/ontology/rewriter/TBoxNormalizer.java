@@ -87,6 +87,7 @@ public class TBoxNormalizer {
 			Concept superConcept = conceptInclusion.getSuperConcept();
 			
 			if(!(subConcept instanceof UnmanagedConcept) && !(superConcept instanceof UnmanagedConcept)) {
+				
 				if (subConcept.isAtomic() && superConcept.isAtomic()) {
 					trasformedAxioms.add(conceptInclusion);
 				}
@@ -98,6 +99,9 @@ public class TBoxNormalizer {
 						trasformedAxioms.add(new ConceptInclusionAxiom(subConcept, newSuperConcept));
 						addAxiomsFromConcept(superConcept);
 					}
+				}
+				else if (conceptInclusion.isInNormalForm() || conceptInclusion.isInNormalFormInOneStep()) {
+					trasformedAxioms.add(conceptInclusion);
 				}
 				else if (superConcept.isAtomic()) {
 					Concept newSubConcept = subConcept.getFreshAtomicConcept();
