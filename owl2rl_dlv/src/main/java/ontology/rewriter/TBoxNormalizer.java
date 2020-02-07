@@ -48,7 +48,14 @@ public class TBoxNormalizer {
 			Concept subConcept = axiom.getSubConcept();
 			Concept superConcept = axiom.getSuperConcept();
 			if (!(superConcept instanceof ExistentialConcept)) {
-				if (subConcept instanceof DisjunctionConcept) {
+				if (superConcept instanceof NegatedConcept) {
+					NegatedConcept neg = (NegatedConcept) superConcept;
+					ConjunctionConcept newSubConcept = new ConjunctionConcept();
+					newSubConcept.getConcepts().add(subConcept);
+					newSubConcept.getConcepts().add((neg.getConcept()));
+					normalizedAxioms.add(new ConceptInclusionAxiom(newSubConcept, new BottomConcept()));
+				}
+				else if (subConcept instanceof DisjunctionConcept) {
 					DisjunctionConcept disj = (DisjunctionConcept) subConcept;
 					for (Concept concept : disj.getConcepts()) {
 						normalizedAxioms.add(new ConceptInclusionAxiom(concept,superConcept));
@@ -63,13 +70,6 @@ public class TBoxNormalizer {
 					if (minCon.getMinCardinality() == 1) {
 						normalizedAxioms.add(new ConceptInclusionAxiom(minCon.getConcept(), new UniversalConcept(minCon.getRole().getInverseRole(), superConcept)));
 					}
-				}
-				else if (superConcept instanceof NegatedConcept) {
-					NegatedConcept neg = (NegatedConcept) superConcept;
-					ConjunctionConcept newSubConcept = new ConjunctionConcept();
-					newSubConcept.getConcepts().add(subConcept);
-					newSubConcept.getConcepts().add((neg.getConcept()));
-					normalizedAxioms.add(new ConceptInclusionAxiom(newSubConcept, new BottomConcept()));
 				}
 				else if (superConcept instanceof ConjunctionConcept) {
 					ConjunctionConcept conj = (ConjunctionConcept) superConcept;

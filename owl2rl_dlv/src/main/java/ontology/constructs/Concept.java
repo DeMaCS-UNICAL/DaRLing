@@ -84,4 +84,36 @@ public abstract class Concept {
 		return false;
 	}
 	
+	public boolean isConjunctionOfAtomicConcept() {
+		if (this.isAtomic()) {
+			return true;
+		}
+		if (this instanceof ConjunctionConcept) {
+			ConjunctionConcept concept = (ConjunctionConcept) this;
+			for (Concept c : concept.getConcepts()) {
+				if (!c.isAtomic()) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isDisjunctionOfAtomicConcept() {
+		if (this.isAtomic()) {
+			return true;
+		}
+		if (this instanceof DisjunctionConcept) {
+			DisjunctionConcept concept = (DisjunctionConcept) this;
+			for (Concept c : concept.getConcepts()) {
+				if (!c.isAtomic()) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
 }
