@@ -24,6 +24,13 @@ public class Literal {
 		negative = false;
 	}
 	
+	public Literal(String predicateName, ArrayList<Term> arguments) {
+		this.predicateName = predicateName;
+		this.arity = arguments.size();
+		this.arguments = arguments;
+		negative = false;
+	}
+	
 	public Literal(String predicateName, int arity, ArrayList<Term> arguments) {
 		this.predicateName = predicateName;
 		this.arity = arity;
