@@ -48,6 +48,9 @@ public class TBoxNormalizer {
 			Concept subConcept = axiom.getSubConcept();
 			Concept superConcept = axiom.getSuperConcept();
 			if (!(superConcept instanceof ExistentialConcept)) {
+				if (subConcept instanceof TopConcept) {
+					specialAxioms.add(axiom);
+				}
 				if (superConcept instanceof NegatedConcept) {
 					NegatedConcept neg = (NegatedConcept) superConcept;
 					ConjunctionConcept newSubConcept = new ConjunctionConcept();
@@ -63,12 +66,20 @@ public class TBoxNormalizer {
 				}
 				else if (subConcept instanceof ExistentialConcept) {
 					ExistentialConcept exCon = (ExistentialConcept) subConcept;
-					normalizedAxioms.add(new ConceptInclusionAxiom(exCon.getConcept(), new UniversalConcept(exCon.getRole().getInverseRole(), superConcept)));
+					if (exCon.getConcept() instanceof TopConcept) {
+						specialAxioms.add(new ConceptInclusionAxiom(exCon.getConcept(), new UniversalConcept(exCon.getRole().getInverseRole(), superConcept)));
+					} else {
+						normalizedAxioms.add(new ConceptInclusionAxiom(exCon.getConcept(), new UniversalConcept(exCon.getRole().getInverseRole(), superConcept)));
+					}
 				}
 				else if (subConcept instanceof MinCardinalityConcept) {
 					MinCardinalityConcept minCon = (MinCardinalityConcept) subConcept;
 					if (minCon.getMinCardinality() == 1) {
-						normalizedAxioms.add(new ConceptInclusionAxiom(minCon.getConcept(), new UniversalConcept(minCon.getRole().getInverseRole(), superConcept)));
+						if (minCon.getConcept() instanceof TopConcept) {
+							specialAxioms.add(new ConceptInclusionAxiom(minCon.getConcept(), new UniversalConcept(minCon.getRole().getInverseRole(), superConcept)));
+						} else {
+							normalizedAxioms.add(new ConceptInclusionAxiom(minCon.getConcept(), new UniversalConcept(minCon.getRole().getInverseRole(), superConcept)));
+						}
 					}
 				}
 				else if (superConcept instanceof ConjunctionConcept) {

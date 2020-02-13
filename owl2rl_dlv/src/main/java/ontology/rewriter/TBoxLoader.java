@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.*;
 
 public class TBoxLoader {
 	
-	private final static boolean SHORT_FORM = true;
+	private final static boolean SHORT_FORM = false;
 	
 	private TBox tbox;
 	private Set<UnmanagedAxiom> unmanagedAxioms = new HashSet<UnmanagedAxiom>();
