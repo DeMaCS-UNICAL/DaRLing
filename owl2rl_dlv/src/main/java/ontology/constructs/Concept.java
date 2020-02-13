@@ -116,4 +116,30 @@ public abstract class Concept {
 		return false;
 	}
 	
+	public boolean isELIConcept() {
+		if (this instanceof AtomicConcept) {
+			return true;
+		} 
+		if (this instanceof ExistentialConcept) {
+			ExistentialConcept existConcept = (ExistentialConcept) this;
+			return existConcept.getConcept().isELIConcept();
+		}
+		if (this instanceof MinCardinalityConcept) {
+			MinCardinalityConcept minCardConcept = (MinCardinalityConcept) this;
+			if (minCardConcept.getMinCardinality() == 1) {
+				return minCardConcept.getConcept().isELIConcept();
+			}
+		}
+		if (this instanceof ConjunctionConcept) {
+			ConjunctionConcept conjConcept = (ConjunctionConcept) this;
+			for (Concept c : conjConcept.getConcepts()) {
+				if (!c.isELIConcept()) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
 }
