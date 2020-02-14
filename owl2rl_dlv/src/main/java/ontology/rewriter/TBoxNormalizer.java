@@ -11,7 +11,9 @@ public class TBoxNormalizer {
 	private Set<ConceptInclusionAxiom> axioms;
 	private Set<ConceptInclusionAxiom> trasformedAxioms;
 	private Set<ConceptInclusionAxiom> normalizedAxioms;
+	private Set<ConceptInclusionAxiom> subELIConceptAxioms;
 	private Set<ConceptInclusionAxiom> specialAxioms;
+
 	private Set<Concept> scannedConcepts = new HashSet<Concept>();
 	
 	
@@ -19,6 +21,7 @@ public class TBoxNormalizer {
 		normalizedAxioms = new HashSet<ConceptInclusionAxiom>();
 		trasformedAxioms = new HashSet<ConceptInclusionAxiom>();
 		specialAxioms = new HashSet<ConceptInclusionAxiom>();
+		subELIConceptAxioms = new HashSet<ConceptInclusionAxiom>();
 	}
 	
 	public TBoxNormalizer(Set<ConceptInclusionAxiom> axioms) {
@@ -108,17 +111,19 @@ public class TBoxNormalizer {
 				if (subConcept.isAtomic() && superConcept.isAtomic()) {
 					trasformedAxioms.add(conceptInclusion);
 				}
-				else if (subConcept.isAtomic()) {
-					if (subConcept instanceof TopConcept) {
-						specialAxioms.add(conceptInclusion);
-					} else {
-						Concept newSuperConcept = superConcept.getFreshAtomicConcept();
-						trasformedAxioms.add(new ConceptInclusionAxiom(subConcept, newSuperConcept));
-						addAxiomsFromConcept(superConcept);
-					}
+				else if (subConcept instanceof TopConcept) {
+					specialAxioms.add(conceptInclusion);
 				}
 				else if (conceptInclusion.isInNormalForm() || conceptInclusion.isInNormalFormInOneStep()) {
 					trasformedAxioms.add(conceptInclusion);
+				}
+				else if (subConcept.isAtomic()) {
+					Concept newSuperConcept = superConcept.getFreshAtomicConcept();
+					trasformedAxioms.add(new ConceptInclusionAxiom(subConcept, newSuperConcept));
+					addAxiomsFromConcept(superConcept);
+				}
+				else if (subConcept.isELIConcept() && superConcept instanceof AtomicConcept) {
+					subELIConceptAxioms.add(conceptInclusion);
 				}
 				else if (superConcept.isAtomic()) {
 					Concept newSubConcept = subConcept.getFreshAtomicConcept();
