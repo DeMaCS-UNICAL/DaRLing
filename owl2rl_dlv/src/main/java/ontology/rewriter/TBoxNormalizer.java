@@ -29,6 +29,7 @@ public class TBoxNormalizer {
 		normalizedAxioms = new HashSet<ConceptInclusionAxiom>();
 		trasformedAxioms = new HashSet<ConceptInclusionAxiom>();
 		specialAxioms = new HashSet<ConceptInclusionAxiom>();
+		subELIConceptAxioms = new HashSet<ConceptInclusionAxiom>();
 	}
 	
 	public Set<ConceptInclusionAxiom> getSpecialAxioms() {
@@ -41,6 +42,10 @@ public class TBoxNormalizer {
 	
 	public Set<ConceptInclusionAxiom> getNormalizedAxioms() {
 		return normalizedAxioms;
+	}
+	
+	public Set<ConceptInclusionAxiom> getSubELIConceptAxioms() {
+		return subELIConceptAxioms;
 	}
 
 	public void normalizeAxioms() {
@@ -124,6 +129,7 @@ public class TBoxNormalizer {
 				}
 				else if (subConcept.isELIConcept() && superConcept instanceof AtomicConcept) {
 					subELIConceptAxioms.add(conceptInclusion);
+					System.out.println("CACCA");
 				}
 				else if (superConcept.isAtomic()) {
 					Concept newSubConcept = subConcept.getFreshAtomicConcept();

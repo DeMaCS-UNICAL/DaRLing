@@ -43,8 +43,10 @@ public class OWL2RL_TBoxRewriter {
 		normalizer.normalizeAxioms();
 		
 		Set<ConceptInclusionAxiom> normalizedAxioms = normalizer.getNormalizedAxioms();
+		Set<ConceptInclusionAxiom> subELIConceptAxioms = normalizer.getSubELIConceptAxioms();
 		Set<ConceptInclusionAxiom> specialAxioms = normalizer.getSpecialAxioms();
 		
+		// Normal Axioms
 		for (ConceptInclusionAxiom subConceptOfAxiom : normalizedAxioms) {
 			
 			System.out.println("Translate normalized axiom: " + subConceptOfAxiom);
@@ -105,6 +107,12 @@ public class OWL2RL_TBoxRewriter {
 				}
 					
 			}
+		}
+		
+		// ELI-SubConcept Axioms
+		for (ConceptInclusionAxiom ax : subELIConceptAxioms) {
+			System.out.println("Translate ELI-SubConcept axiom: " + ax);
+			System.out.println("ONGOING...");								// TODO: implement method to translate!
 		}
 		
 		// Special Axioms
