@@ -349,7 +349,7 @@ public class OWL2RL_TBoxRewriter {
 			getBodyLiteralsfromELIConcept(body, exCon.getConcept(), 0, newVariable);
 		}
 		else if (eliConcept instanceof MinCardinalityConcept && ((MinCardinalityConcept) eliConcept).getMinCardinality() == 1) {
-			ExistentialConcept minCon = (ExistentialConcept) eliConcept;
+			MinCardinalityConcept minCon = (MinCardinalityConcept) eliConcept;
 			Variable newVariable = new Variable(sharedVariable.getName() + "_" + clause);
 			Literal l = getLiteralFromRole(minCon.getRole(), sharedVariable, newVariable);
 			body.getBodyLiterals().add(l);
