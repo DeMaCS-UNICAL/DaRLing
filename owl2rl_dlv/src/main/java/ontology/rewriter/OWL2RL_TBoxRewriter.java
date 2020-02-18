@@ -112,7 +112,14 @@ public class OWL2RL_TBoxRewriter {
 		// ELI-SubConcept Axioms
 		for (ConceptInclusionAxiom ax : subELIConceptAxioms) {
 			System.out.println("Translate ELI-SubConcept axiom: " + ax);
-			System.out.println("ONGOING...");								// TODO: implement method to translate!
+			Body body = new Body();
+			Concept c = ax.getSubConcept();
+			getBodyLiteralsfromELIConcept(body, c, 0, new Variable("X")); 
+			Head head = new Head();
+			head.setHeadAtom(getLiteralFromAtomicConcept(ax.getSuperConcept(), new Variable("X")));
+			Rule rule = new Rule(head, body);
+			rules.add(rule);
+			System.out.println("Added Datalog rule: " + rule);								
 		}
 		
 		// Special Axioms
@@ -319,6 +326,34 @@ public class OWL2RL_TBoxRewriter {
 			Literal literal = new Literal(concept.toString(),1);
 			literal.getArguments().add(t);
 			return literal;
+		}
+	}
+	
+	private static void getBodyLiteralsfromELIConcept(Body body, Concept eliConcept, int clause, Variable sharedVariable) {
+		if (eliConcept instanceof AtomicConcept) {
+			Literal l = getLiteralFromAtomicConcept(eliConcept, sharedVariable);
+			body.getBodyLiterals().add(l);
+		}
+		else if (eliConcept instanceof ConjunctionConcept) {
+			ConjunctionConcept conj = (ConjunctionConcept) eliConcept;
+			for (Concept c : conj.getConcepts()) {
+				getBodyLiteralsfromELIConcept(body, c, clause, sharedVariable);
+				clause++;
+			}
+		}
+		else if (eliConcept instanceof ExistentialConcept) {
+			ExistentialConcept exCon = (ExistentialConcept) eliConcept;
+			Variable newVariable = new Variable(sharedVariable.getName() + "_" + clause);
+			Literal l = getLiteralFromRole(exCon.getRole(), sharedVariable, newVariable);
+			body.getBodyLiterals().add(l);
+			getBodyLiteralsfromELIConcept(body, exCon.getConcept(), 0, newVariable);
+		}
+		else if (eliConcept instanceof MinCardinalityConcept && ((MinCardinalityConcept) eliConcept).getMinCardinality() == 1) {
+			ExistentialConcept minCon = (ExistentialConcept) eliConcept;
+			Variable newVariable = new Variable(sharedVariable.getName() + "_" + clause);
+			Literal l = getLiteralFromRole(minCon.getRole(), sharedVariable, newVariable);
+			body.getBodyLiterals().add(l);
+			getBodyLiteralsfromELIConcept(body, minCon.getConcept(), 0, newVariable);
 		}
 	}
 	
