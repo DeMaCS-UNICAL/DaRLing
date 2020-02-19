@@ -129,7 +129,6 @@ public class TBoxNormalizer {
 				}
 				else if (subConcept.isELIConcept() && superConcept instanceof AtomicConcept) {
 					subELIConceptAxioms.add(conceptInclusion);
-					System.out.println("CACCA");
 				}
 				else if (superConcept.isAtomic()) {
 					Concept newSubConcept = subConcept.getFreshAtomicConcept();
