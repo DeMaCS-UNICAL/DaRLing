@@ -2,6 +2,7 @@ package ontology.constructs;
 
 public abstract class Concept {
 	
+	
 	public abstract boolean equals(Object obj);
 	public abstract String toString();
 	public abstract boolean isAtomic();

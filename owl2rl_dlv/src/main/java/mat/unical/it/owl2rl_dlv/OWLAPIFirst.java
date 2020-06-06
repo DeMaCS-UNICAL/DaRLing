@@ -1,6 +1,6 @@
 package mat.unical.it.owl2rl_dlv;
 
-import java.io.File;
+import java.io.*;
 import java.util.Set;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -16,29 +16,63 @@ import ontology.rewriter.OWL2RL_TBoxRewriter;
 
 public class OWLAPIFirst {
 
-	public static void main(String[] args) throws OWLOntologyCreationException, UnmanagedCostructException {
+	public static void main(String[] args) throws OWLOntologyCreationException, UnmanagedCostructException, FileNotFoundException {
 
 		OWLOntologyManager man = OWLManager.createOWLOntologyManager();
-		File file = new File("dbpedia.owl");
-		OWLOntology o = man.loadOntologyFromOntologyDocument(file);
+		File file = new File("univ-bench-RL.owl");
+		OWLOntology ont = man.loadOntologyFromOntologyDocument(file);
 		
-		TBoxLoader tBoxLoader = new TBoxLoader();
-		tBoxLoader.load(o);
-		System.out.println("Unmanaged Axioms: ");
-		for (UnmanagedAxiom a : tBoxLoader.getUnmanagedAxioms()) {
-			System.out.println(a);
-		}
+		TBoxLoader tBoxLoader = new TBoxLoader(true);
+		tBoxLoader.load(ont);
+//		System.out.println("Unmanaged Axioms: ");
+//		for (UnmanagedAxiom a : tBoxLoader.getUnmanagedAxioms()) {
+//			System.out.println(a);
+//		}
+		
 //		System.out.println("Concept Inclusions: " + tBoxLoader.getTBox().getConceptInclusions().size() + "\nRole Inclusions: " +tBoxLoader.getTBox().getRoleInclusions().size()
 //				+ "\nDisjoint Roles Axioms: " + tBoxLoader.getTBox().getDisjointRolesAxioms().size() + "\nIrreflexive Axioms: " + tBoxLoader.getTBox().getIrreflexiveAxioms().size()
 //				+ "\nAsymmetric Axioms: " + tBoxLoader.getTBox().getAsymmetricAxioms().size() + "\nTransitivity Axioms: " + tBoxLoader.getTBox().getTransitivityAxioms().size());
 		
 		OWL2RL_TBoxRewriter rewriter = new OWL2RL_TBoxRewriter();
 		rewriter.rewrite(tBoxLoader.getTBox());
+		
+		PrintStream datalogTBoxFile = new PrintStream(new File("LUBM_Datalog_TBox.txt"));
+		PrintStream constraintsFile = new PrintStream(new File("LUBM_Constraints.txt"));
+		  
+        // Store current System.out before assigning a new value 
+//        PrintStream console = System.out; 
+  
+        // Assign ontTranslationFile to output stream 
+		
+		for (Rule rule : rewriter.getDatalogProgram().getRules()) {
+			if (rule.getHead().getHeadAtom().getPredicateName() == "") {
+				System.setOut(constraintsFile);
+				System.out.println(rule);
+			}
+			else {
+				System.setOut(datalogTBoxFile);
+				System.out.println(rule);
+			}
+		}
+         
+		
 //		System.out.println("Ontology Rewrited:");
 //		System.out.println(rewriter.getDatalogProgram());
 		
 		
-		
+//		// Creating a File object that represents the disk file. 
+//        PrintStream o = new PrintStream(new File("TranslatedOntology.txt")); 
+//  
+//        // Store current System.out before assigning a new value 
+//        PrintStream console = System.out; 
+//  
+//        // Assign o to output stream 
+//        System.setOut(o); 
+//        System.out.println("This will be written to the text file"); 
+//  
+//        // Use stored value for output stream 
+//        System.setOut(console); 
+//        System.out.println("This will be written on the console!"); 
 		
 		
 //		for (OWLAxiom ax : o.getLogicalAxioms()) {

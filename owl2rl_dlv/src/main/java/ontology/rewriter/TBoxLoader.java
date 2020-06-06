@@ -11,13 +11,19 @@ import org.semanticweb.owlapi.model.*;
 
 public class TBoxLoader {
 	
-	private final static boolean SHORT_FORM = false;
+	private boolean shortForm;
 	
 	private TBox tbox;
 	private Set<UnmanagedAxiom> unmanagedAxioms = new HashSet<UnmanagedAxiom>();
 	
 	public TBoxLoader() { 
 		tbox = new TBox();
+		shortForm = false;
+	}
+	
+	public TBoxLoader(boolean shortForm) { 
+		tbox = new TBox();
+		this.shortForm = shortForm;
 	}
 	
 	public TBox getTBox() {
@@ -73,6 +79,7 @@ public class TBoxLoader {
 					// EquivalentClasses
 					else if (ax instanceof OWLEquivalentClassesAxiom) {
 						OWLEquivalentClassesAxiom equivClassAx = (OWLEquivalentClassesAxiom) ax;
+						
 						Set<OWLClassExpression> exprs = equivClassAx.getClassExpressionsMinus();
 						for(OWLClassExpression subExpr : exprs) {
 							Concept subConcept = generateConceptFrom(subExpr);
@@ -80,7 +87,7 @@ public class TBoxLoader {
 								for (OWLClassExpression superExp : exprs) {
 									Concept superConcept = generateConceptFrom(superExp);
 									if (superConcept.isManaged()) {
-										if (!subConcept.equals(superConcept)) {
+										if (!subExpr.equals(superExp)) {
 											ConceptInclusionAxiom ci = new ConceptInclusionAxiom(subConcept,superConcept);
 											cis.add(ci);
 											System.out.println("Added axiom: " + ci);
@@ -202,7 +209,7 @@ public class TBoxLoader {
 							Role subRole = generateRoleFrom(subProp);
 							for (OWLObjectPropertyExpression superProp : propExprs) {
 								Role superRole = generateRoleFrom(superProp);
-								if(!subRole.equals(superRole)) {
+								if(!subProp.equals(superProp)) {
 									RoleInclusionAxiom ri = new RoleInclusionAxiom(subRole,superRole);
 									ris.add(ri);
 									System.out.println("Added axiom: " + ri);
@@ -353,7 +360,7 @@ public class TBoxLoader {
 							Role subRole = generateRoleFrom(subProp);
 							for (OWLDataPropertyExpression superProp : propExprs) {
 								Role superRole = generateRoleFrom(superProp);
-								if(!subRole.equals(superRole)) {
+								if(!subProp.equals(superProp)) {
 									RoleInclusionAxiom ri = new RoleInclusionAxiom(subRole,superRole);
 									ris.add(ri);
 									System.out.println("Added axiom: " + ri);
@@ -437,7 +444,7 @@ public class TBoxLoader {
 	}
 	
 	
-	private static Concept generateConceptFrom(OWLClassExpression expr) {
+	private Concept generateConceptFrom(OWLClassExpression expr) {
 		
 		// TopEntity -> TopConcept
 		if(expr.isTopEntity()) {
@@ -449,10 +456,11 @@ public class TBoxLoader {
 		}
 		// Class -> AtomicConcept
 		else if(expr instanceof OWLClass) {
-			if (SHORT_FORM) {
+			if (shortForm) {
 				return new AtomicConcept(((OWLClass) expr).getIRI().getShortForm());
 			} else {
-				return new AtomicConcept(((OWLClass) expr).toStringID());
+//				return new AtomicConcept(((OWLClass) expr).toStringID());
+				return new AtomicConcept(((OWLClass) expr).toString());
 			}
 		}
 		// ObjectIntersectionOf -> ConjunctionConcept
@@ -542,33 +550,37 @@ public class TBoxLoader {
 		
 	}
 	
-	private static Role generateRoleFrom(OWLObjectPropertyExpression expr) {
+	private Role generateRoleFrom(OWLObjectPropertyExpression expr) {
 		if(expr instanceof OWLProperty) {
 			OWLProperty property = (OWLProperty) expr;
-			if (SHORT_FORM) {
+			if (shortForm) {
 				if (property instanceof OWLObjectInverseOf) 
 					return new Role(property.getIRI().getShortForm(),true);
 				return new Role(property.getIRI().getShortForm());
 			} else {
 				if (property instanceof OWLObjectInverseOf) 
-					return new Role(property.toStringID(),true);
-				return new Role(property.toStringID());
+//					return new Role(property.toStringID(),true);
+					return new Role(property.toString(),true);
+//				return new Role(property.toStringID());
+				return new Role(property.toString());
 			}
 		}
 		return new UnmanagedRole();
 	}
 	
-	private static Role generateRoleFrom(OWLDataPropertyExpression expr) {
+	private Role generateRoleFrom(OWLDataPropertyExpression expr) {
 		if(expr instanceof OWLProperty) {
 			OWLProperty property = (OWLProperty) expr;
-			if (SHORT_FORM) {
+			if (shortForm) {
 				if (property instanceof OWLObjectInverseOf) 
 					return new Role(property.getIRI().getShortForm(),true);
 				return new Role(property.getIRI().getShortForm());
 			} else {
 				if (property instanceof OWLObjectInverseOf) 
 					return new Role(property.toStringID(),true);
+//					return new Role(property.toString(),true);
 				return new Role(property.toStringID());
+//				return new Role(property.toString());
 			}
 		}
 		return new UnmanagedRole();

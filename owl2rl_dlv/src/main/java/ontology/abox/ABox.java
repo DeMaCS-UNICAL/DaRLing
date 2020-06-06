@@ -1,32 +1,37 @@
 package ontology.abox;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ABox {
 	
-	private List<ConceptAssertion> conceptAssertions;
-	private List<RoleAssertion> roleAssertions;
+	private Set<ConceptAssertion> conceptAssertions;
+	private Set<RoleAssertion> roleAssertions;
 	
-	public ABox() { }
+	public ABox() { 
+		conceptAssertions = new HashSet<ConceptAssertion>();
+		roleAssertions = new HashSet<RoleAssertion>();
+	}
 
-	public ABox(List<ConceptAssertion> conceptAssertions, List<RoleAssertion> roleAssertions) {
+	public ABox(Set<ConceptAssertion> conceptAssertions, Set<RoleAssertion> roleAssertions) {
 		this.conceptAssertions = conceptAssertions;
 		this.roleAssertions = roleAssertions;
 	}
 
-	public List<ConceptAssertion> getConceptAssertions() {
+	public Set<ConceptAssertion> getConceptAssertions() {
 		return conceptAssertions;
 	}
 
-	public void setConceptAssertions(List<ConceptAssertion> conceptAssertions) {
+	public void setConceptAssertions(Set<ConceptAssertion> conceptAssertions) {
 		this.conceptAssertions = conceptAssertions;
 	}
 
-	public List<RoleAssertion> getRoleAssertions() {
+	public Set<RoleAssertion> getRoleAssertions() {
 		return roleAssertions;
 	}
 
-	public void setRoleAssertions(List<RoleAssertion> roleAssertions) {
+	public void setRoleAssertions(Set<RoleAssertion> roleAssertions) {
 		this.roleAssertions = roleAssertions;
 	}
 
