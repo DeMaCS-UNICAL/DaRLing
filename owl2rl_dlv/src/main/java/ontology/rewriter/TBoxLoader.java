@@ -7,9 +7,14 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import org.semanticweb.owlapi.model.*;
+//import org.semanticweb.owlapi.utilities.Injector;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 
 public class TBoxLoader {
+//	private static final Logger logger = Logger.getLogger(TBoxLoader.class);
 	
 	private boolean shortForm;
 	
@@ -19,11 +24,19 @@ public class TBoxLoader {
 	public TBoxLoader() { 
 		tbox = new TBox();
 		shortForm = false;
+	
+		// Logger Configuration
+//		BasicConfigurator.configure();
+//		logger.setLevel(Level.ERROR);
 	}
 	
 	public TBoxLoader(boolean shortForm) { 
 		tbox = new TBox();
 		this.shortForm = shortForm;
+		
+		// Logger Configuration
+//		BasicConfigurator.configure();
+//		logger.setLevel(Level.ERROR);
 	}
 	
 	public TBox getTBox() {
