@@ -14,7 +14,7 @@ import ontology.tbox.UnmanagedAxiom;
 import ontology.rewriter.OWL2RL_TBoxRewriter;
 
 
-public class OWLAPIFirst {
+public class TestTBoxRewriting {
 
 	public static void main(String[] args) throws OWLOntologyCreationException, UnmanagedCostructException, FileNotFoundException {
 

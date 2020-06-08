@@ -15,11 +15,11 @@ import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import datalog.costructs.*;
 
-public class QueryTranslator {
+public class QueryConstructor {
 	
 	private static final String HEAD_PREDICATE = "ans";
 	
-	public QueryTranslator () {}
+	public QueryConstructor () {}
 	
 	public Rule translate (String queryString) {
 		
