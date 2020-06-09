@@ -52,7 +52,7 @@ public class QueryConstructor {
 						for (TriplePath triplePath : block.getPattern()) {
 							Triple triple = triplePath.asTriple();
 							if (triple.getPredicate().getURI().equals(OWLRDFVocabulary.RDF_TYPE.toString())) {
-								Literal bodyLiteral = new Literal(triple.getObject().toString(),1);
+								Literal bodyLiteral = new Literal("<" + triple.getObject().toString() + ">",1);
 								if (triple.getSubject().isVariable()) {
 									Var x = (Var) triple.getSubject();
 									bodyLiteral.getArguments().add(new Variable(x.getVarName()));
@@ -63,7 +63,7 @@ public class QueryConstructor {
 								queryBody.getBodyLiterals().add(bodyLiteral);
 							}
 							else {
-								Literal bodyLiteral = new Literal(triple.getPredicate().toString(),2);
+								Literal bodyLiteral = new Literal("<" + triple.getPredicate().toString() + ">",2);
 								
 								if (triple.getSubject().isVariable()) {
 									Var x = (Var) triple.getSubject();
@@ -96,7 +96,7 @@ public class QueryConstructor {
 			
 			
 //			if (query.isDistinct()) {
-//				//TODO : mettere l'aggregato nel corpo per contare le risposte distinte
+//				//TODO 
 //			}
 			
 		}
