@@ -51,7 +51,7 @@ public class ABoxLoader {
 					OWLClassAssertionAxiom classAssertion = (OWLClassAssertionAxiom) ax;
 					
 					if (classAssertion.getClassExpression() instanceof OWLClass) {
-						AtomicConcept concept = new AtomicConcept(((OWLClass) classAssertion.getClassExpression()).toStringID());
+						AtomicConcept concept = new AtomicConcept(((OWLClass) classAssertion.getClassExpression()).toString());
 						Individual individual = new Individual(classAssertion.getIndividual().toStringID());
 						ConceptAssertion ca = new ConceptAssertion(concept, individual);
 						cas.add(ca);
@@ -71,7 +71,7 @@ public class ABoxLoader {
 						
 						OWLProperty property = (OWLProperty) objPropertyAssertion.getProperty();
 					
-						Role role = new Role(property.toStringID());
+						Role role = new Role(property.toString());
 						
 						if (property instanceof OWLObjectInverseOf) {
 							role.setInverse(true);
@@ -99,7 +99,7 @@ public class ABoxLoader {
 						
 							OWLProperty property = (OWLProperty) dataPropertyAssertion.getProperty();
 						
-							Role role = new Role(property.toStringID());
+							Role role = new Role(property.toString());
 							
 							if (property instanceof OWLObjectInverseOf) {
 								role.setInverse(true);
