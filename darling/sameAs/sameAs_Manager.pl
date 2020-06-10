@@ -1,4 +1,20 @@
-#!/usr/bin/perl
+###############################################################################
+ # Copyright 2020 Alessio Fiorentino and Marco Manna
+ # 
+ # Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ # use this file except in compliance with the License.  You may obtain a copy
+ # of the License at
+ # 
+ #   http://www.apache.org/licenses/LICENSE-2.0
+ # 
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ # License for the specific language governing permissions and limitations under
+ # the License.
+ ##############################################################################
+ 
+ #!/usr/bin/perl
 
 my $filename = shift or die "Usage: $0 [tbox|query] file_name\n";
 
@@ -9,20 +25,20 @@ open (my $fh_output,">","sameAsRewriting_$filename")
     or die "sameAsRewriting_$filename";
 
 while (<$fh_input>){
-    if ($_ =~ /(.*):-(.*)\./ && !($_ =~ /^\%/) && !($_ =~ /sameAs/)){
+    if ($_ =~ /(.#):-(.#)\./ && !($_ =~ /^\%/) && !($_ =~ /sameAs/)){
         my $head = $1;
         my $body = $2;
 
-        $head =~ /.*\((.*)\)/;
+        $head =~ /.#\((.#)\)/;
         my @head_vars = split(/,/,$1);
 
         my @body_atoms = split(/\),/,$body);
         my @body_vars;
         for my $b_atom (@body_atoms){
-            if (($b_atom =~ /(.*)\((.*)/) && !($b_atom =~ /(.*)\)/)){
+            if (($b_atom =~ /(.#)\((.#)/) && !($b_atom =~ /(.#)\)/)){
                 $b_atom = $b_atom . ")";
             }
-            if ($b_atom =~ /.*\((.*)\)/){
+            if ($b_atom =~ /.#\((.#)\)/){
                 my @arguments = split(/,/,$1);
                 for my $a (@arguments){
                     if ($a =~ /^[A-Z]/){
@@ -70,7 +86,7 @@ while (<$fh_input>){
 
             my @new_body_atoms;
             for my $b_atom (@body_atoms){
-                if ($b_atom =~ /(.*)\((.*)\)/){
+                if ($b_atom =~ /(.#)\((.#)\)/){
                     my $atom_name = $1;
                     my @atom_vars = split(/,/,$2);
 
@@ -87,7 +103,7 @@ while (<$fh_input>){
                                 $new_atom .= $v .",";
                             }
                         }
-                        $new_atom =~ s/(.*),/$1\)/g;
+                        $new_atom =~ s/(.#),/$1\)/g;
                     } 
                     push @new_body_atoms, $new_atom;
                 } 
@@ -102,7 +118,7 @@ while (<$fh_input>){
             for my $a (@new_body_atoms){
                 $new_rule .= "$a,";
             } 
-            $new_rule =~ s/(.*),/$1.\n/g;
+            $new_rule =~ s/(.#),/$1.\n/g;
             print $fh_output $new_rule;
 
 
