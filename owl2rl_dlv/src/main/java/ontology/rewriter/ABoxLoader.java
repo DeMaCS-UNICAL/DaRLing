@@ -11,10 +11,12 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
+import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectInverseOf;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLProperty;
+import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import ontology.abox.*;
 import ontology.constructs.*;
@@ -124,8 +126,23 @@ public class ABoxLoader {
 					
 				}
 
-				// Declaration Axioms
-				else if (ax instanceof OWLDeclarationAxiom) {}
+				// Individual Equality (sameAs) Axioms
+				else if (ax instanceof OWLSameIndividualAxiom) {
+					OWLSameIndividualAxiom owlSameAsAxiom = (OWLSameIndividualAxiom) ax;
+					Stream<OWLIndividual> streamIndividuals = owlSameAsAxiom.individuals();
+					
+					Iterator<OWLIndividual> indivIterator = streamIndividuals.iterator();
+					Individual firstIndividual = new Individual(indivIterator.next().toStringID());
+					
+					Role sameAsRole = new Role("sameAs");
+					
+					while (indivIterator.hasNext()) {
+						Individual currentIndividual = new Individual(indivIterator.next().toStringID());
+						RoleAssertion sameAsAssertion = new RoleAssertion(sameAsRole, firstIndividual, currentIndividual);
+						ras.add(sameAsAssertion);
+					}
+					
+				}
 				
 			
 			
