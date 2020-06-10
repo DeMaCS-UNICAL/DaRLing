@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,16 +69,19 @@ public class Manager {
         Option queryOption = new Option("q", "query", true, "Query input file(s)");
         queryOption.setRequired(false);
         options.addOption(queryOption);
+        Option sameAsOption = new Option("s", "sameas", false, "Enable owl:sameAs management");
+        sameAsOption.setRequired(false);
+        options.addOption(sameAsOption);
         CommandLine cmd = null;
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
-            formatter.printHelp("java -jar darling.jar", options);
+            formatter.printHelp(" ", options);
             System.exit(1);
         }
 		       
         if(cmd.hasOption("help")) {
-            formatter.printHelp("java -jar darling.jar", options);
+            formatter.printHelp(" ", options);
             System.exit(1);	
         }
 		if(cmd.hasOption("abox")) {
@@ -86,10 +90,13 @@ public class Manager {
 			List<File> aboxFiles = new ArrayList<File>();
 			if(listFilesForFolder(abox, aboxFiles)) {
 				try {
+					PrintStream original = System.out;
 					String fileNameWithoutExt = FilenameUtils.removeExtension(abox.getName());
+					System.setOut(original);
 					aboxManager.createProgramFrom(aboxFiles);
 					Program aboxProgram=aboxManager.getProgram();
 					writeOnFile(fileNameWithoutExt+".asp", aboxProgram, false);
+					System.out.println("ABox written in: "+fileNameWithoutExt+".asp");
 				} catch (OWLOntologyCreationException e) {
 					System.out.println("Error in ABox processing.");
 					e.printStackTrace();
@@ -108,14 +115,18 @@ public class Manager {
 			tbox=new File(cmd.getOptionValue("tbox"));
 			if(listFilesForFolder(tbox, tboxFiles)) {
 				try {
+					PrintStream original = System.out;
 					tboxManager.createProgramFrom(tboxFiles);
+					System.setOut(original);
 					tboxProgram=tboxManager.getProgram();
 					String fileNameWithoutExt = FilenameUtils.removeExtension(tbox.getName());
 					writeOnFile(fileNameWithoutExt+".asp", tboxProgram, false);
+					System.out.println("TBox written in: "+fileNameWithoutExt+".asp");
 				} catch (OWLOntologyCreationException e) {
 					System.out.println("Error in TBox processing.");
 					e.printStackTrace();
-				} catch (IOException e) {
+				} 
+				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -125,20 +136,22 @@ public class Manager {
 			QueryManager queryManager = new QueryManager();
 			File query=new File(cmd.getOptionValue("query"));
 			try {
+				PrintStream original = System.out;
 				queryManager.createDatalogQueriesFrom(query);
+				System.setOut(original);
 			} catch (FileNotFoundException e) {
-				System.out.println("Error: File not found."+args[2]);
+				System.out.println("Error: File not found "+cmd.getOptionValue("query"));
 			}
 			List<Rule> queries=queryManager.getPrograms();
 			if(!queries.isEmpty()) {
 				for(int i=0;i<queries.size();++i) {
-					System.out.println("query"+i);
 					String fileNameWithoutExt = FilenameUtils.removeExtension(tbox.getName());
 					fileNameWithoutExt+="_query_"+(int)(i+1)+".asp";
-					try {
+					try {						
 						if(tboxProgram!=null) 
 							writeOnFile(fileNameWithoutExt, queries.get(i), false);
 						writeOnFile(fileNameWithoutExt, tboxProgram, true);
+						System.out.println("Query "+(int)(i+1)+" written in: "+fileNameWithoutExt);
 					} catch (IOException e) {
 						System.out.println("Error when writing query "+i+" in output.");
 					}
