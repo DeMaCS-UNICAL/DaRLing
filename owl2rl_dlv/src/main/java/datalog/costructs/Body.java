@@ -12,8 +12,9 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
  * License for the specific language governing permissions and limitations under
  * the License.
+ * the License.
  ******************************************************************************/
- ******************************************************************************/
+
 package datalog.costructs;
 
 import java.util.HashSet;
