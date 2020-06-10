@@ -1,1 +1,1 @@
-# owl2rl_DLV
+# A Datalog Rewriter for OWL 2 RL Ontologies
