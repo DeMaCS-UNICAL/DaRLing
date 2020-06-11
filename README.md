@@ -22,9 +22,9 @@ $ perl darling.pl [options]
 ```
 
 As **input**, it takes:
-  - the ontology (i.e. the TBox) contained in a single file or in a folder containing multiple files,
-  - the dataset (i.e. the ABox) contained in a single file or in a folder containing multiple files,
-  - one or more queries have to be contained in a file with the *.SPARQL* extension.
+  - the *ontology* (i.e. the TBox) contained in a single file or in a folder containing multiple files,
+  - the *dataset* (i.e. the ABox) contained in a single file or in a folder containing multiple files,
+  - one or more *queries* have to be contained in a file with the *.SPARQL* extension.
 
 As **output**, it produces in the same folder from which it is executed:
   - a *.asp* file for the *dataset* (if given as input),
