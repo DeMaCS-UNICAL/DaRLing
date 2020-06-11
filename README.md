@@ -3,7 +3,7 @@
 *DaRLing* is a *Da*talog Rewriter for OWL 2 *RL* Ontological Reason*ing* built on top of the OWL API.
 
 *DaRLing* supports:  
-  - tranlation of (the RL fragment of) OWL 2 ontologies,
+  - translation of (the RL fragment of) OWL 2 ontologies,
   - loading of RDF/XML dataset,
   - translation of SPARQL queries,
   - `owl:sameAs` handling
@@ -22,7 +22,8 @@ $ perl darling.pl [options]
 ```
 
 As **input**, it takes:
-  - the ontology (resp., the dataset) contained in a single file or in a folder containing multiple files,
+  - the ontology (i.e. the TBox) contained in a single file or in a folder containing multiple files,
+  - the dataset (i.e. the ABox) contained in a single file or in a folder containing multiple files,
   - one or more queries have to be contained in a file with the *.SPARQL* extension.
 
 As **output**, it produces in the same folder from which it is executed:
