@@ -47,6 +47,10 @@ Outputted .asp files contain the respective Datalog translation.
 
 ### License
 
-*DaRLing* licensed under the Apache License, Version 2.0. 
+*DaRLing* is licensed under the Apache License, Version 2.0. 
 
 For further information, contact fiorentino@mat.unical.it, manna@mat.unical.it and zangari@mat.unical.it.
+
+### ICLP 2020
+
+Benchmarks relative to ICLP 2020 submission can be downloaded [here](https://file.io/irVm1L8I?expires=6m).
