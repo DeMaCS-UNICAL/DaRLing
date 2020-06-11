@@ -6,7 +6,7 @@
   - translation of (the RL fragment of) OWL 2 ontologies,
   - loading of RDF/XML dataset,
   - translation of SPARQL queries,
-  - `owl:sameAs` handling
+  - `owl:sameAs` handling,
   - loading of datatypes, such as `xsd:string` and `xsd:integer`,
   - OWL API input formats.
 
