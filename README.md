@@ -49,7 +49,7 @@ Outputted .asp files contain the respective Datalog translation.
 
 *DaRLing* is licensed under the Apache License, Version 2.0. 
 
-For further information, contact fiorentino@mat.unical.it, manna@mat.unical.it and zangari@mat.unical.it.
+For further information, contact fiorentino_AT_mat.unical.it, manna_AT_mat.unical.it and zangari_AT_mat.unical.it.
 
 ### ICLP 2020
 
