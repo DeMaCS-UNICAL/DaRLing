@@ -53,4 +53,4 @@ For further information, contact fiorentino_AT_mat.unical.it, manna_AT_mat.unica
 
 ### ICLP 2020
 
-Benchmarks relative to ICLP 2020 submission can be downloaded [here](https://gofile.io/d/1bRMSL).
+Benchmarks relative to ICLP 2020 submission can be downloaded [here](https://www.mat.unical.it/~phd_nik/ICLP-2020.zip).
