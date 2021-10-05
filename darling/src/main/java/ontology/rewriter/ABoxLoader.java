@@ -71,13 +71,15 @@ public class ABoxLoader {
 					OWLClassAssertionAxiom classAssertion = (OWLClassAssertionAxiom) ax;
 					
 					
-					// C(a).
+					// Atomic concept assertion 
 					if (classAssertion.getClassExpression() instanceof OWLClass) {
 						AtomicConcept concept = new AtomicConcept(((OWLClass) classAssertion.getClassExpression()).toString());
 						Individual individual = new Individual(classAssertion.getIndividual().toStringID());
 						ConceptAssertion ca = new ConceptAssertion(concept, individual);
 						cas.add(ca);
-					}else {
+					}
+					// TODO: Complex concept assertion (C(a) --> D(a) and D 'subConceptOf' C)
+					else {
 						System.out.println("Error during loading ABox: unmanaged axiom:" + ax);
 					}
 					
