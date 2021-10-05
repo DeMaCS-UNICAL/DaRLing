@@ -77,11 +77,10 @@ public class ABoxLoader {
 						Individual individual = new Individual(classAssertion.getIndividual().toStringID());
 						ConceptAssertion ca = new ConceptAssertion(concept, individual);
 						cas.add(ca);
-					}
-					// TODO: Complex concept assertion (C(a) --> D(a) and D 'subConceptOf' C)
-					else {
+					}else {
 						System.out.println("Error during loading ABox: unmanaged axiom:" + ax);
 					}
+					// TODO: Complex concept assertion (C(a) --> D(a) and D 'subConceptOf' C)
 					
 				}
 				
