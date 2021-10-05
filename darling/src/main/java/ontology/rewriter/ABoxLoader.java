@@ -30,6 +30,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectInverseOf;
+import org.semanticweb.owlapi.model.OWLObjectMaxCardinality;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -69,13 +70,15 @@ public class ABoxLoader {
 					
 					OWLClassAssertionAxiom classAssertion = (OWLClassAssertionAxiom) ax;
 					
+					
+					// C(a).
 					if (classAssertion.getClassExpression() instanceof OWLClass) {
 						AtomicConcept concept = new AtomicConcept(((OWLClass) classAssertion.getClassExpression()).toString());
 						Individual individual = new Individual(classAssertion.getIndividual().toStringID());
 						ConceptAssertion ca = new ConceptAssertion(concept, individual);
 						cas.add(ca);
 					}else {
-						System.out.println("Error during loading ABox: Concept not Atomic found in:" + ax);
+						System.out.println("Error during loading ABox: unmanaged axiom:" + ax);
 					}
 					
 				}
